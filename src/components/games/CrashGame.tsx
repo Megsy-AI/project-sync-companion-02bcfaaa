@@ -43,6 +43,32 @@ const chipTone = (m: number) =>
     ? "bg-[hsl(var(--crash-gold))] text-[hsl(var(--crash-bg))]"
     : "bg-[hsl(var(--crash-accent))] text-primary-foreground";
 
+/** Smoothly counting bet amount that pops as it grows with the multiplier. */
+const LiveAmount = ({ value, live }: { value: number; live: boolean }) => {
+  const mv = useMotionValue(value);
+  const spring = useSpring(mv, { stiffness: 120, damping: 20, mass: 0.4 });
+  const text = useTransform(spring, (v) => v.toFixed(2));
+
+  useEffect(() => {
+    mv.set(value);
+  }, [value, mv]);
+
+  return (
+    <motion.span
+      className="block text-[15px] tabular-nums"
+      animate={
+        live
+          ? { scale: [1, 1.08, 1], color: "hsl(var(--crash-gold))" }
+          : { scale: 1, color: "hsl(var(--foreground))" }
+      }
+      transition={{ scale: { duration: 0.5, repeat: live ? Infinity : 0, ease: "easeInOut" }, color: { duration: 0.3 } }}
+    >
+      {text}
+    </motion.span>
+  );
+};
+
+
 const CrashGame = () => {
   const { user, refreshProfile } = useApp();
   const { toast } = useToast();
