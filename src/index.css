@@ -210,30 +210,31 @@
 
   /* ---- Warm paper cards (Tasks) ---- */
   .paper-surface {
-    background: hsl(160 14% 9% / 0.72);
-    -webkit-backdrop-filter: blur(18px) saturate(140%);
-    backdrop-filter: blur(18px) saturate(140%);
+    background: hsl(220 12% 8% / 0.82);
+    -webkit-backdrop-filter: blur(20px) saturate(120%);
+    backdrop-filter: blur(20px) saturate(120%);
   }
   .paper-card {
-    background: hsl(160 14% 11% / 0.66);
-    -webkit-backdrop-filter: blur(18px) saturate(140%);
-    backdrop-filter: blur(18px) saturate(140%);
-    border: 1px solid hsl(0 0% 100% / 0.12);
+    background: hsl(220 12% 9% / 0.8);
+    -webkit-backdrop-filter: blur(20px) saturate(120%);
+    backdrop-filter: blur(20px) saturate(120%);
+    border: 1px solid hsl(0 0% 100% / 0.1);
     border-radius: 1.5rem;
-    box-shadow: 0 18px 40px -24px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255,255,255,0.06);
+    box-shadow: 0 20px 44px -26px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.05);
   }
   .paper-row {
-    background: hsl(160 14% 12% / 0.62);
+    background: hsl(220 12% 13% / 0.78);
     -webkit-backdrop-filter: blur(14px);
     backdrop-filter: blur(14px);
-    border: 1px solid hsl(0 0% 100% / 0.12);
+    border: 1px solid hsl(0 0% 100% / 0.08);
     border-radius: 1rem;
     transition: background 0.2s ease, transform 0.2s ease;
   }
   .paper-row:active {
     transform: scale(0.985);
-    background: hsl(160 14% 14% / 0.75);
+    background: hsl(220 12% 17% / 0.86);
   }
+
   .paper-eyebrow {
     font-size: 10px;
     font-weight: 600;
