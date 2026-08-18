@@ -239,7 +239,7 @@ const CrashGame = () => {
 
   return (
     <div
-      className="min-h-screen pb-40"
+      className="min-h-screen pb-48"
       style={{
         background:
           "radial-gradient(120% 70% at 50% 0%, hsl(var(--crash-surface) / 0.55), transparent 60%), linear-gradient(180deg, hsl(var(--crash-bg)) 0%, hsl(258 60% 5%) 100%)",
@@ -271,7 +271,7 @@ const CrashGame = () => {
               key="crash"
               src="/images/duck-crash.webp"
               alt="Duck crashed"
-              className="absolute left-1/2 top-1/2 h-[190px] w-[190px] -translate-x-1/2 -translate-y-1/2 object-contain"
+              className="absolute left-1/2 top-[44%] h-[190px] w-[190px] -translate-x-1/2 -translate-y-1/2 object-contain"
               initial={{ scale: 0.6, opacity: 0, rotate: -12 }}
               animate={{ scale: [1.1, 1], opacity: 1, rotate: [6, -4, 0] }}
               exit={{ opacity: 0, scale: 0.7 }}
@@ -282,7 +282,7 @@ const CrashGame = () => {
               key="fly"
               src="/images/duck-fly.webp"
               alt="Duck flying"
-              className="absolute left-1/2 top-1/2 h-[180px] w-[180px] -translate-x-1/2 -translate-y-1/2 object-contain"
+              className="absolute left-1/2 top-[44%] h-[180px] w-[180px] -translate-x-1/2 -translate-y-1/2 object-contain"
               initial={{ opacity: 0, y: 40, scale: 0.85 }}
               animate={{ opacity: 1, y: [0, -14, 0], scale: 1, rotate: [-3, 3, -3] }}
               exit={{ opacity: 0, y: -80, scale: 0.6 }}
@@ -293,7 +293,7 @@ const CrashGame = () => {
               key="idle"
               src="/images/duck-idle.webp"
               alt="Duck waiting"
-              className="absolute left-1/2 top-1/2 h-[170px] w-[170px] -translate-x-1/2 -translate-y-1/2 object-contain"
+              className="absolute left-1/2 top-[44%] h-[170px] w-[170px] -translate-x-1/2 -translate-y-1/2 object-contain"
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: [1, 1.04, 1] }}
               exit={{ opacity: 0 }}
@@ -303,7 +303,7 @@ const CrashGame = () => {
         </AnimatePresence>
 
         {/* Readout */}
-        <div className="absolute inset-x-0 bottom-3 text-center">
+        <div className="absolute inset-x-0 bottom-0 text-center">
           {phase === "betting" ? (
             <>
               <p className="text-[11px] font-semibold uppercase tracking-[0.3em] text-muted-foreground">Next round in</p>
