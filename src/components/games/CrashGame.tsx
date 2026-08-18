@@ -309,10 +309,10 @@ const CrashGame = () => {
             {phase === "crashed" ? (
               <motion.img
                 key="crash"
-                src="/images/duck-boom-hd.png"
+                src="/images/duck-crash.gif"
                 alt="Duck exploded"
-                width={1024}
-                height={1024}
+                width={512}
+                height={512}
                 className="h-[210px] w-[210px] object-contain drop-shadow-[0_10px_45px_hsl(var(--crash-danger)/0.55)]"
                 initial={{ scale: 0.35, opacity: 0, rotate: -15 }}
                 animate={{
@@ -327,10 +327,10 @@ const CrashGame = () => {
             ) : phase === "betting" ? (
               <motion.img
                 key="idle"
-                src="/images/duck-wait-hd.png"
+                src="/images/duck-wait.gif"
                 alt="Duck waiting for the next game"
-                width={1024}
-                height={1024}
+                width={512}
+                height={512}
                 className="h-[190px] w-[190px] object-contain"
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: [1, 1.04, 1], y: [0, -8, 0], rotate: [-3, 3, -3] }}
@@ -345,10 +345,10 @@ const CrashGame = () => {
             ) : (
               <motion.img
                 key="plane"
-                src="/images/duck-plane-hd.png"
+                src="/images/duck-plane.gif"
                 alt="Duck flying a plane"
-                width={1024}
-                height={1024}
+                width={512}
+                height={512}
                 className="h-[210px] w-[210px] object-contain drop-shadow-[0_18px_40px_hsl(var(--crash-accent)/0.5)]"
                 initial={{ opacity: 0, y: 40, scale: 0.85 }}
                 animate={{ opacity: 1, scale: 1, y: [0, -20, 0], x: [-6, 6, -6], rotate: [-6, 6, -6] }}
