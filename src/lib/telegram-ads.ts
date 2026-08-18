@@ -46,10 +46,28 @@ let richController: any = null;
 let initialised = false;
 
 /** The SDK reads the Telegram user itself; it only works inside Telegram. */
-const telegramReady = (): boolean =>
-  !!(window as any).Telegram?.WebApp?.initDataUnsafe?.user?.id;
+const telegramUserId = (): number | undefined =>
+  (window as any).Telegram?.WebApp?.initDataUnsafe?.user?.id;
 
-/** Highest-paying formats first: video > mixed > banner > native notification. */
+/** initDataUnsafe can populate a moment after the WebApp script runs. */
+const waitForTelegramUser = async (timeoutMs = 3000): Promise<boolean> => {
+  const start = Date.now();
+  while (Date.now() - start < timeoutMs) {
+    if (telegramUserId()) return true;
+    try {
+      (window as any).Telegram?.WebApp?.ready?.();
+    } catch {
+      /* ignore */
+    }
+    await new Promise((r) => setTimeout(r, 150));
+  }
+  return !!telegramUserId();
+};
+
+/**
+ * Highest-paying formats first: video > mixed > banner > native notification.
+ * Verified against the live SDK: every name below exists on the controller.
+ */
 const AD_METHODS = [
   "triggerInterstitialVideo",
   "triggerInterstitialMixed",
@@ -73,15 +91,9 @@ const getRichController = async (): Promise<any> => {
     return null;
   }
 
-  if (!telegramReady()) {
+  if (!(await waitForTelegramUser())) {
     lastAdError = "Ads only work inside Telegram";
     return null;
-  }
-
-  try {
-    (window as any).Telegram?.WebApp?.ready?.();
-  } catch {
-    /* ignore */
   }
 
   if (!richController) richController = new Ctor();
@@ -92,9 +104,12 @@ const getRichController = async (): Promise<any> => {
     initialised = true;
   } catch (e: any) {
     initialised = false;
+    // Drop the half-initialised instance so the next tap starts clean.
+    richController = null;
     lastAdError = `init: ${e?.message ?? "failed"}`;
     return null;
   }
+
 
   return richController;
 };
