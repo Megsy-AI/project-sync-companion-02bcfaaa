@@ -62,6 +62,7 @@ const CrashGame = () => {
   const [busy, setBusy] = useState(false);
   const [round, setRound] = useState(roundId);
   const [players, setPlayers] = useState<Player[]>([]);
+  const [playerCount, setPlayerCount] = useState(40);
 
   const startedAt = useRef(0);
   const bust = useRef(2);
@@ -100,6 +101,7 @@ const CrashGame = () => {
         });
       });
       setPlayers(unique);
+      setPlayerCount(Math.max(unique.length, target));
     },
     [user.telegramUser.id],
   );
@@ -458,7 +460,7 @@ const CrashGame = () => {
       {/* Players */}
       <div className="mx-4 mt-3 overflow-hidden rounded-[28px] bg-[hsl(var(--crash-surface)/0.55)] p-4">
         <div className="flex items-center justify-between">
-          <span className="text-[15px] text-muted-foreground">{players.length} Players</span>
+          <span className="text-[15px] text-muted-foreground">{playerCount} Players</span>
           <span className="font-display text-[17px] text-[hsl(var(--crash-accent-soft))]">Game #{round}</span>
         </div>
 
