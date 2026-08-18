@@ -328,7 +328,7 @@ const WalletPage = () => {
       {/* Assets — iOS grouped list */}
       <p className="paper-eyebrow mb-2 px-1">Assets</p>
       <motion.div
-        className="paper-card mb-4 divide-y divide-border/25 overflow-hidden p-0"
+        className="paper-card mb-4 overflow-hidden p-0"
         initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.05 }}
