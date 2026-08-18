@@ -432,16 +432,7 @@ const WalletPage = () => {
 
       <Dialog open={depositOpen} onOpenChange={setDepositOpen}>
         <DialogContent className="fixed bottom-auto left-1/2 right-auto top-1/2 w-[calc(100%-2rem)] max-w-[360px] -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-[32px] border-0 bg-transparent p-0 shadow-none sm:left-1/2 sm:top-1/2 sm:w-[calc(100%-2rem)] sm:max-w-[360px] sm:-translate-x-1/2 sm:-translate-y-1/2">
-          <div
-            className="relative w-full overflow-hidden rounded-[32px] px-7 pb-8 pt-9 text-center"
-            style={{
-              background: "hsl(0 0% 100% / 0.85)",
-              backdropFilter: "blur(32px) saturate(180%)",
-              WebkitBackdropFilter: "blur(32px) saturate(180%)",
-              border: "1px solid hsl(160 18% 90%)",
-              boxShadow: "0 24px 70px -20px rgba(0,0,0,0.6), inset 0 1px 0 hsl(0 0% 100% / 0.12)",
-            }}
-          >
+          <div className="wallet-dialog-surface relative w-full overflow-hidden rounded-[32px] px-7 pb-8 pt-9 text-center">
             <div
               className="pointer-events-none absolute inset-x-0 top-0 h-24 rounded-t-[32px] opacity-40"
               style={{
@@ -460,7 +451,7 @@ const WalletPage = () => {
             <Input
               placeholder="Amount in Gram"
               type="number"
-              className="relative z-10 mt-6 h-12 rounded-2xl border-0 bg-foreground/[0.06] text-center text-[16px]"
+              className="wallet-dialog-field relative z-10 mt-6 h-12 rounded-2xl text-center text-[16px]"
               value={depositAmount}
               onChange={(e) => setDepositAmount(e.target.value)}
             />
@@ -482,7 +473,7 @@ const WalletPage = () => {
                     type="button"
                     disabled={starBusy}
                     onClick={() => void handleStarsTopUp(pack.id)}
-                    className="rounded-2xl border border-border bg-foreground/[0.04] px-2 py-3 text-center transition-colors hover:bg-foreground/[0.08] disabled:opacity-50"
+                    className="rounded-2xl border border-border bg-secondary px-2 py-3 text-center transition-colors hover:bg-muted disabled:opacity-50"
                   >
                     <span className="block font-display text-[15px] font-medium text-foreground">
                       {pack.usdt} USDT
@@ -501,16 +492,7 @@ const WalletPage = () => {
 
       <Dialog open={withdrawOpen} onOpenChange={setWithdrawOpen}>
         <DialogContent className="fixed bottom-auto left-1/2 right-auto top-1/2 w-[calc(100%-2rem)] max-w-[360px] -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-[32px] border-0 bg-transparent p-0 shadow-none sm:left-1/2 sm:top-1/2 sm:w-[calc(100%-2rem)] sm:max-w-[360px] sm:-translate-x-1/2 sm:-translate-y-1/2">
-          <div
-            className="relative rounded-[32px] px-7 pb-8 pt-9 text-center"
-            style={{
-              background: "hsl(0 0% 100% / 0.85)",
-              backdropFilter: "blur(32px) saturate(180%)",
-              WebkitBackdropFilter: "blur(32px) saturate(180%)",
-              border: "1px solid hsl(160 18% 90%)",
-              boxShadow: "0 24px 70px -20px rgba(0,0,0,0.6), inset 0 1px 0 hsl(0 0% 100% / 0.12)",
-            }}
-          >
+          <div className="wallet-dialog-surface relative rounded-[32px] px-7 pb-8 pt-9 text-center">
             <div
               className="pointer-events-none absolute inset-x-0 top-0 h-24 rounded-t-[32px] opacity-40"
               style={{
@@ -526,7 +508,7 @@ const WalletPage = () => {
                 Choose a currency and amount
               </DialogDescription>
             </DialogHeader>
-            <div className="relative z-10 mt-6 grid grid-cols-2 gap-1.5 rounded-2xl bg-foreground/[0.06] p-1.5">
+            <div className="relative z-10 mt-6 grid grid-cols-2 gap-1.5 rounded-2xl border border-border bg-secondary p-1.5">
               {(["ton", "usdt"] as const).map((c) => (
                 <button
                   key={c}
@@ -544,7 +526,7 @@ const WalletPage = () => {
             <Input
               placeholder={`Amount in ${withdrawCurrency === "ton" ? "Gram" : "USDT"}`}
               type="number"
-              className="relative z-10 mt-4 h-12 rounded-2xl border-0 bg-foreground/[0.06] text-center text-[16px]"
+              className="wallet-dialog-field relative z-10 mt-4 h-12 rounded-2xl text-center text-[16px]"
               value={withdrawAmount}
               onChange={(e) => setWithdrawAmount(e.target.value)}
             />
