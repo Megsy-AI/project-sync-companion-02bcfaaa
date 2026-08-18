@@ -78,7 +78,6 @@ const TasksPage = () => {
 
   const handleTask = async (task: Task) => {
     if (completedTaskIds.includes(task.id) || claiming) return;
-    setClaiming(task.id);
 
     // Open the task link immediately so popup blockers don't fire
     if (task.link) {
@@ -96,6 +95,8 @@ const TasksPage = () => {
         window.open(task.link, "_blank", "noopener,noreferrer");
       }
     }
+
+    setClaiming(task.id);
 
     try {
       const result = await completeTaskForTelegram(user.telegramUser.id, task.id);

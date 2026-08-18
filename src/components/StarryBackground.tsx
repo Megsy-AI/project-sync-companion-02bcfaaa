@@ -40,6 +40,7 @@ const StarryBackground = () => {
         playsInline
         preload="auto"
         disablePictureInPicture
+        poster="/images/bg-poster.jpg"
         className="absolute inset-0 h-full w-full object-cover"
       >
         <source src={bgVideoMp4} type="video/mp4" />
