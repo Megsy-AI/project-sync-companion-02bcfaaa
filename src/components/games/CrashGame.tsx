@@ -7,9 +7,6 @@ import { useApp } from "@/context/AppContext";
 import { useToast } from "@/hooks/use-toast";
 import { PaymentError, sendTonPayment } from "@/lib/ton";
 import { verifyTonOnChain } from "@/lib/game-api";
-import duckFly from "@/assets/duck-fly.webp.asset.json";
-import duckCrash from "@/assets/duck-crash.webp.asset.json";
-import duckChart from "@/assets/duck-chart.webp.asset.json";
 
 /** Multiplier curve — must match the server-side validation (1.07^seconds). */
 const curve = (seconds: number) => Math.pow(1.07, seconds);
@@ -272,7 +269,7 @@ const CrashGame = () => {
           {phase === "crashed" ? (
             <motion.img
               key="crash"
-              src={duckCrash.url}
+              src="/images/duck-crash.webp"
               alt="Duck crashed"
               className="absolute left-1/2 top-1/2 h-[190px] w-[190px] -translate-x-1/2 -translate-y-1/2 object-contain"
               initial={{ scale: 0.6, opacity: 0, rotate: -12 }}
@@ -283,7 +280,7 @@ const CrashGame = () => {
           ) : flying ? (
             <motion.img
               key="fly"
-              src={duckFly.url}
+              src="/images/duck-fly.webp"
               alt="Duck flying"
               className="absolute left-1/2 top-1/2 h-[180px] w-[180px] -translate-x-1/2 -translate-y-1/2 object-contain"
               initial={{ opacity: 0, y: 40, scale: 0.85 }}
@@ -294,7 +291,7 @@ const CrashGame = () => {
           ) : (
             <motion.img
               key="idle"
-              src={duckChart.url}
+              src="/images/duck-idle.webp"
               alt="Duck waiting"
               className="absolute left-1/2 top-1/2 h-[170px] w-[170px] -translate-x-1/2 -translate-y-1/2 object-contain"
               initial={{ opacity: 0, scale: 0.9 }}
