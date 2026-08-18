@@ -265,42 +265,44 @@ const CrashGame = () => {
           />
         ))}
 
-        <AnimatePresence mode="wait">
-          {phase === "crashed" ? (
-            <motion.img
-              key="crash"
-              src="/images/duck-crash.webp"
-              alt="Duck crashed"
-              className="absolute left-1/2 top-[44%] h-[190px] w-[190px] -translate-x-1/2 -translate-y-1/2 object-contain"
-              initial={{ scale: 0.6, opacity: 0, rotate: -12 }}
-              animate={{ scale: [1.1, 1], opacity: 1, rotate: [6, -4, 0] }}
-              exit={{ opacity: 0, scale: 0.7 }}
-              transition={{ duration: 0.5 }}
-            />
-          ) : flying ? (
-            <motion.img
-              key="fly"
-              src="/images/duck-fly.webp"
-              alt="Duck flying"
-              className="absolute left-1/2 top-[44%] h-[180px] w-[180px] -translate-x-1/2 -translate-y-1/2 object-contain"
-              initial={{ opacity: 0, y: 40, scale: 0.85 }}
-              animate={{ opacity: 1, y: [0, -14, 0], scale: 1, rotate: [-3, 3, -3] }}
-              exit={{ opacity: 0, y: -80, scale: 0.6 }}
-              transition={{ y: { duration: 2, repeat: Infinity, ease: "easeInOut" }, rotate: { duration: 3, repeat: Infinity }, opacity: { duration: 0.3 } }}
-            />
-          ) : (
-            <motion.img
-              key="idle"
-              src="/images/duck-idle.webp"
-              alt="Duck waiting"
-              className="absolute left-1/2 top-[44%] h-[170px] w-[170px] -translate-x-1/2 -translate-y-1/2 object-contain"
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: [1, 1.04, 1] }}
-              exit={{ opacity: 0 }}
-              transition={{ scale: { duration: 2.4, repeat: Infinity } }}
-            />
-          )}
-        </AnimatePresence>
+        <div className="pointer-events-none absolute left-1/2 top-[44%] -translate-x-1/2 -translate-y-1/2">
+          <AnimatePresence mode="wait">
+            {phase === "crashed" ? (
+              <motion.img
+                key="crash"
+                src="/images/duck-crash.webp"
+                alt="Duck crashed"
+                className="h-[190px] w-[190px] object-contain"
+                initial={{ scale: 0.6, opacity: 0, rotate: -12 }}
+                animate={{ scale: [1.1, 1], opacity: 1, rotate: [6, -4, 0] }}
+                exit={{ opacity: 0, scale: 0.7 }}
+                transition={{ duration: 0.5 }}
+              />
+            ) : flying ? (
+              <motion.img
+                key="fly"
+                src="/images/duck-fly.webp"
+                alt="Duck flying"
+                className="h-[180px] w-[180px] object-contain"
+                initial={{ opacity: 0, y: 40, scale: 0.85 }}
+                animate={{ opacity: 1, y: [0, -14, 0], scale: 1, rotate: [-3, 3, -3] }}
+                exit={{ opacity: 0, y: -80, scale: 0.6 }}
+                transition={{ y: { duration: 2, repeat: Infinity, ease: "easeInOut" }, rotate: { duration: 3, repeat: Infinity }, opacity: { duration: 0.3 } }}
+              />
+            ) : (
+              <motion.img
+                key="idle"
+                src="/images/duck-idle.webp"
+                alt="Duck waiting"
+                className="h-[170px] w-[170px] object-contain"
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: [1, 1.04, 1] }}
+                exit={{ opacity: 0 }}
+                transition={{ scale: { duration: 2.4, repeat: Infinity } }}
+              />
+            )}
+          </AnimatePresence>
+        </div>
 
         {/* Readout */}
         <div className="absolute inset-x-0 bottom-0 text-center">
