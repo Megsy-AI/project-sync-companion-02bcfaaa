@@ -12929,6 +12929,13 @@ export type Database = {
         Args: { _at: number; _bet_id: string; _telegram_id: number }
         Returns: Json
       }
+      game_crash_players: {
+        Args: { _exclude?: number; _limit?: number; _round: number }
+        Returns: {
+          name: string
+          photo_url: string
+        }[]
+      }
       game_crash_start: {
         Args: { _stake: number; _telegram_id: number }
         Returns: Json
