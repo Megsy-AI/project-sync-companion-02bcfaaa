@@ -62,6 +62,13 @@
     --aviator: 188 100% 55%;
     --aviator-glow: 190 100% 72%;
     --aviator-sky: 220 45% 6%;
+    /* Crash game surface — deep violet night palette */
+    --crash-bg: 258 55% 8%;
+    --crash-surface: 258 52% 22%;
+    --crash-accent: 258 90% 66%;
+    --crash-accent-soft: 258 70% 74%;
+    --crash-gold: 42 100% 58%;
+    --crash-danger: 12 92% 58%;
     --gold: 38 95% 55%;
     --sidebar-background: 0 0% 100%;
     --sidebar-foreground: 160 22% 14%;
