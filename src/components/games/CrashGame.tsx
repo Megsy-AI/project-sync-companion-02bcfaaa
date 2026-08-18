@@ -72,9 +72,11 @@ const CrashGame = () => {
   /** Real usernames + avatars pulled from the database, deduplicated per round. */
   const rollPlayers = useCallback(
     async (forRound: number) => {
+      // 40 → 120 players per round (deterministic per round so everyone sees the same lobby)
+      const target = 40 + (Math.abs(Math.sin(forRound) * 10000) % 81 | 0);
       const { data } = await (supabase as any).rpc("game_crash_players", {
         _round: forRound,
-        _limit: 4 + (forRound % 5),
+        _limit: target,
         _exclude: user.telegramUser.id,
       });
       const rows: { name: string; photo_url: string | null }[] = Array.isArray(data) ? data : [];
