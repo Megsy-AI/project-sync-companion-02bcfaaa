@@ -62,6 +62,7 @@ const CrashGame = () => {
   const [busy, setBusy] = useState(false);
   const [round, setRound] = useState(roundId);
   const [players, setPlayers] = useState<Player[]>([]);
+  const [playerCount, setPlayerCount] = useState(40);
 
   const startedAt = useRef(0);
   const bust = useRef(2);
@@ -72,9 +73,11 @@ const CrashGame = () => {
   /** Real usernames + avatars pulled from the database, deduplicated per round. */
   const rollPlayers = useCallback(
     async (forRound: number) => {
+      // 40 → 120 players per round (deterministic per round so everyone sees the same lobby)
+      const target = 40 + (Math.abs(Math.sin(forRound) * 10000) % 81 | 0);
       const { data } = await (supabase as any).rpc("game_crash_players", {
         _round: forRound,
-        _limit: 4 + (forRound % 5),
+        _limit: target,
         _exclude: user.telegramUser.id,
       });
       const rows: { name: string; photo_url: string | null }[] = Array.isArray(data) ? data : [];
@@ -98,6 +101,7 @@ const CrashGame = () => {
         });
       });
       setPlayers(unique);
+      setPlayerCount(Math.max(unique.length, target));
     },
     [user.telegramUser.id],
   );
@@ -456,7 +460,7 @@ const CrashGame = () => {
       {/* Players */}
       <div className="mx-4 mt-3 overflow-hidden rounded-[28px] bg-[hsl(var(--crash-surface)/0.55)] p-4">
         <div className="flex items-center justify-between">
-          <span className="text-[15px] text-muted-foreground">{players.length} Players</span>
+          <span className="text-[15px] text-muted-foreground">{playerCount} Players</span>
           <span className="font-display text-[17px] text-[hsl(var(--crash-accent-soft))]">Game #{round}</span>
         </div>
 
