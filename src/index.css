@@ -285,6 +285,26 @@
     background: hsl(222 12% 30% / 1);
   }
 
+  .wallet-dialog-surface {
+    background: hsl(var(--card) / 0.98);
+    color: hsl(var(--card-foreground));
+    -webkit-backdrop-filter: blur(32px) saturate(140%);
+    backdrop-filter: blur(32px) saturate(140%);
+    border: 1px solid hsl(var(--border));
+    box-shadow: 0 24px 70px -20px hsl(var(--background) / 0.95), inset 0 1px 0 hsl(var(--foreground) / 0.08);
+  }
+
+  .wallet-dialog-field {
+    background: hsl(var(--secondary));
+    color: hsl(var(--foreground));
+    border: 1px solid hsl(var(--border));
+  }
+
+  .wallet-dialog-field::placeholder {
+    color: hsl(var(--muted-foreground));
+    opacity: 1;
+  }
+
 
 
 
