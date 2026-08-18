@@ -269,14 +269,17 @@
     align-items: center;
     justify-content: center;
     line-height: 1;
-    background: hsl(0 0% 100% / 0.1);
+    background: hsl(220 12% 18% / 0.9);
     color: hsl(var(--foreground));
+    border: 1px solid hsl(0 0% 100% / 0.16);
     border-radius: 9999px;
-    transition: transform 0.2s ease, opacity 0.2s ease;
+    transition: transform 0.2s ease, opacity 0.2s ease, background 0.2s ease;
   }
   .btn-ink-soft:active {
     transform: scale(0.98);
+    background: hsl(220 12% 24% / 0.95);
   }
+
 
 
 
