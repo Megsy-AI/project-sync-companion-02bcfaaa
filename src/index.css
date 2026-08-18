@@ -35,21 +35,22 @@
     /* White + mint green + soft pink — Nova light theme */
     --background: 160 16% 6%;
     --foreground: 0 0% 100%;
-    --card: 160 14% 10%;
+    --card: 220 12% 10%;
     --card-foreground: 0 0% 100%;
-    --popover: 160 14% 10%;
+    --popover: 220 12% 10%;
     --popover-foreground: 0 0% 100%;
     --primary: 158 78% 40%;
     --primary-foreground: 0 0% 100%;
     --primary-glow: 164 80% 62%;
-    --secondary: 160 12% 16%;
+    --secondary: 220 12% 16%;
     --secondary-foreground: 0 0% 100%;
-    --muted: 160 10% 18%;
-    --muted-foreground: 160 10% 84%;
+    --muted: 220 10% 18%;
+    --muted-foreground: 220 8% 78%;
     --accent: 338 85% 68%;
     --accent-foreground: 0 0% 100%;
     --action: 0 0% 100%;
-    --action-foreground: 160 22% 10%;
+    --action-foreground: 220 14% 10%;
+
     --destructive: 5 74% 55%;
     --destructive-foreground: 0 0% 100%;
     --border: 0 0% 100% / 0.14;
