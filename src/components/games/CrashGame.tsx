@@ -345,7 +345,7 @@ const CrashGame = () => {
             >
               {phase === "crashed" ? (
                 <img
-                  src={`/images/duck-crash-v2.gif?round=${round}`}
+                  src={`/images/duck-crash-telegram.webp?round=${round}`}
                   alt="Duck exploded"
                   width={360}
                   height={360}
@@ -353,7 +353,7 @@ const CrashGame = () => {
                 />
               ) : phase === "betting" ? (
                 <img
-                  src={`/images/duck-wait-v2.gif?round=${round}`}
+                  src={`/images/duck-wait-telegram.webp?round=${round}`}
                   alt="Duck waiting for the next game"
                   width={360}
                   height={360}
@@ -361,7 +361,7 @@ const CrashGame = () => {
                 />
               ) : (
                 <img
-                  src={`/images/duck-plane-v2.gif?round=${round}`}
+                  src={`/images/duck-fly-telegram.webp?round=${round}`}
                   alt="Duck flying a plane"
                   width={360}
                   height={360}
