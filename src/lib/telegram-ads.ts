@@ -76,10 +76,26 @@ const AD_METHODS = [
   "triggerNativeNotification",
 ];
 
+/** Rejects if a promise hangs longer than `ms`. */
+const withTimeout = <T,>(p: Promise<T>, ms: number, label: string): Promise<T> =>
+  new Promise<T>((resolve, reject) => {
+    const t = setTimeout(() => reject(new Error(`${label} timeout`)), ms);
+    p.then(
+      (v) => {
+        clearTimeout(t);
+        resolve(v);
+      },
+      (e) => {
+        clearTimeout(t);
+        reject(e);
+      },
+    );
+  });
+
 const getRichController = async (): Promise<any> => {
   if (richController && initialised) return richController;
 
-  const loaded = await loadScript(RICHADS_SDK);
+  const loaded = await withTimeout(loadScript(RICHADS_SDK), 8000, "sdk").catch(() => false);
   if (!loaded) {
     lastAdError = "SDK failed to load";
     return null;
@@ -100,7 +116,13 @@ const getRichController = async (): Promise<any> => {
 
   try {
     // initialize() resolves once the publisher configuration is fetched.
-    await richController.initialize({ pubId: RICHADS_PUB_ID, appId: String(RICHADS_APP_ID), debug: false });
+    await withTimeout(
+      Promise.resolve(
+        richController.initialize({ pubId: RICHADS_PUB_ID, appId: String(RICHADS_APP_ID), debug: false }),
+      ),
+      8000,
+      "init",
+    );
     initialised = true;
   } catch (e: any) {
     initialised = false;
@@ -117,6 +139,7 @@ const getRichController = async (): Promise<any> => {
 /**
  * Shows exactly one RichAds ad, only when called from a user action
  * (the "Watch" button). Tries every format, highest paying first.
+ * Every step is time-boxed so the button never stays stuck on "Loading...".
  */
 export const showAd = async (): Promise<boolean> => {
   lastAdError = "";
@@ -127,8 +150,21 @@ export const showAd = async (): Promise<boolean> => {
     const fn = controller[method];
     if (typeof fn !== "function") continue;
     try {
-      const res = await fn.call(controller);
-      if (res === false) continue;
+      const out = fn.call(controller);
+      if (out && typeof out.then === "function") {
+        try {
+          const res = await withTimeout(out, 20000, method);
+          if (res === false) continue;
+          return true;
+        } catch (err: any) {
+          if (String(err?.message ?? "").includes("timeout")) {
+            // The ad view is open but the SDK never settles: count it as shown.
+            return true;
+          }
+          throw err;
+        }
+      }
+      if (out === false) continue;
       return true;
     } catch (e: any) {
       lastAdError = `${method}: ${e?.message ?? "no fill"}`;
@@ -138,3 +174,4 @@ export const showAd = async (): Promise<boolean> => {
   if (!lastAdError) lastAdError = "No fill";
   return false;
 };
+
