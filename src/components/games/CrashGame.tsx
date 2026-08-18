@@ -335,64 +335,52 @@ const CrashGame = () => {
         ))}
 
         <div className="pointer-events-none absolute left-1/2 top-[44%] -translate-x-1/2 -translate-y-1/2">
-          <AnimatePresence mode="wait">
-            {phase === "crashed" ? (
-              <motion.img
-                key="crash"
-                src="/images/duck-crash.gif"
-                alt="Duck exploded"
-                width={512}
-                height={512}
-                className="h-[210px] w-[210px] object-contain drop-shadow-[0_10px_45px_hsl(var(--crash-danger)/0.55)]"
-                initial={{ scale: 0.35, opacity: 0, rotate: -15 }}
-                animate={{
-                  scale: [0.35, 1.25, 1, 1.05, 1],
-                  opacity: 1,
-                  rotate: [-15, 8, -5, 3, 0],
-                  x: [0, -10, 10, -5, 0],
-                }}
-                exit={{ opacity: 0, scale: 0.7 }}
-                transition={{ duration: 0.9, ease: "easeOut" }}
-              />
-            ) : phase === "betting" ? (
-              <motion.img
-                key="idle"
-                src="/images/duck-wait.gif"
-                alt="Duck waiting for the next game"
-                width={512}
-                height={512}
-                className="h-[190px] w-[190px] object-contain"
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: [1, 1.04, 1], y: [0, -8, 0], rotate: [-3, 3, -3] }}
-                exit={{ opacity: 0, scale: 0.8 }}
-                transition={{
-                  y: { duration: 2, repeat: Infinity, ease: "easeInOut" },
-                  scale: { duration: 2, repeat: Infinity, ease: "easeInOut" },
-                  rotate: { duration: 3, repeat: Infinity, ease: "easeInOut" },
-                  opacity: { duration: 0.2 },
-                }}
-              />
-            ) : (
-              <motion.img
-                key="plane"
-                src="/images/duck-plane.gif"
-                alt="Duck flying a plane"
-                width={512}
-                height={512}
-                className="h-[210px] w-[210px] object-contain drop-shadow-[0_18px_40px_hsl(var(--crash-accent)/0.5)]"
-                initial={{ opacity: 0, y: 40, scale: 0.85 }}
-                animate={{ opacity: 1, scale: 1, y: [0, -20, 0], x: [-6, 6, -6], rotate: [-6, 6, -6] }}
-                exit={{ opacity: 0, y: -110, scale: 0.55 }}
-                transition={{
-                  y: { duration: 1.4, repeat: Infinity, ease: "easeInOut" },
-                  x: { duration: 2.6, repeat: Infinity, ease: "easeInOut" },
-                  rotate: { duration: 2, repeat: Infinity, ease: "easeInOut" },
-                  opacity: { duration: 0.3 },
-                }}
-              />
-            )}
+          <AnimatePresence mode="popLayout" initial={false}>
+            <motion.div
+              key={phase === "crashed" ? "crash" : phase === "betting" ? "idle" : "plane"}
+              initial={{ opacity: 0, scale: 0.85 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.85 }}
+              transition={{ duration: 0.25, ease: "easeOut" }}
+            >
+              {phase === "crashed" ? (
+                <motion.img
+                  src="/images/duck-crash.gif"
+                  alt="Duck exploded"
+                  width={360}
+                  height={360}
+                  className="h-[210px] w-[210px] object-contain drop-shadow-[0_10px_45px_hsl(var(--crash-danger)/0.55)]"
+                  animate={{ rotate: [-6, 6, -3, 0], x: [0, -10, 10, 0] }}
+                  transition={{ duration: 0.7, ease: "easeOut" }}
+                />
+              ) : phase === "betting" ? (
+                <motion.img
+                  src="/images/duck-wait.gif"
+                  alt="Duck waiting for the next game"
+                  width={360}
+                  height={360}
+                  className="h-[190px] w-[190px] object-contain"
+                  animate={{ y: [0, -8, 0] }}
+                  transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                />
+              ) : (
+                <motion.img
+                  src="/images/duck-plane.gif"
+                  alt="Duck flying a plane"
+                  width={360}
+                  height={360}
+                  className="h-[210px] w-[210px] object-contain drop-shadow-[0_18px_40px_hsl(var(--crash-accent)/0.5)]"
+                  animate={{ y: [0, -18, 0], x: [-6, 6, -6] }}
+                  transition={{
+                    y: { duration: 1.4, repeat: Infinity, ease: "easeInOut" },
+                    x: { duration: 2.6, repeat: Infinity, ease: "easeInOut" },
+                  }}
+                />
+              )}
+            </motion.div>
           </AnimatePresence>
         </div>
+
 
         {/* Readout */}
         <div className="absolute inset-x-0 bottom-0 text-center">
