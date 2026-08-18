@@ -499,7 +499,7 @@ const CrashGame = () => {
               <img src={p.photo || ""} alt={`${p.name} avatar`} loading="lazy" className="h-9 w-9 shrink-0 rounded-full object-cover" />
               <span className="min-w-0 flex-1 truncate text-[15px] text-muted-foreground">{p.name}</span>
               <span className="text-right">
-                <span className="block text-[15px] text-foreground">{p.bet.toFixed(2)}</span>
+                <LiveAmount value={phase === "betting" ? p.bet : p.bet * (crashAt ?? mult)} live={flying} />
                 {p.out && (
                   <span className="block text-[12px] font-semibold text-[hsl(var(--crash-danger))]">x{p.out.toFixed(2)}</span>
                 )}
