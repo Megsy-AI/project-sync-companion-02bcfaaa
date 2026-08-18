@@ -211,30 +211,32 @@
 
   /* ---- Warm paper cards (Tasks) ---- */
   .paper-surface {
-    background: hsl(220 12% 8% / 0.82);
-    -webkit-backdrop-filter: blur(20px) saturate(120%);
-    backdrop-filter: blur(20px) saturate(120%);
+    background: hsl(222 14% 7% / 0.96);
+    -webkit-backdrop-filter: blur(24px) saturate(120%);
+    backdrop-filter: blur(24px) saturate(120%);
   }
   .paper-card {
-    background: hsl(220 12% 9% / 0.8);
-    -webkit-backdrop-filter: blur(20px) saturate(120%);
-    backdrop-filter: blur(20px) saturate(120%);
-    border: 1px solid hsl(0 0% 100% / 0.1);
+    background: hsl(222 14% 8% / 0.97);
+    -webkit-backdrop-filter: blur(24px) saturate(120%);
+    backdrop-filter: blur(24px) saturate(120%);
+    border: 1px solid hsl(0 0% 100% / 0.16);
     border-radius: 1.5rem;
-    box-shadow: 0 20px 44px -26px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    box-shadow: 0 24px 50px -24px rgba(0, 0, 0, 0.95), inset 0 1px 0 rgba(255, 255, 255, 0.07);
   }
   .paper-row {
-    background: hsl(220 12% 13% / 0.78);
-    -webkit-backdrop-filter: blur(14px);
-    backdrop-filter: blur(14px);
-    border: 1px solid hsl(0 0% 100% / 0.08);
+    background: hsl(222 12% 14% / 0.98);
+    -webkit-backdrop-filter: blur(16px);
+    backdrop-filter: blur(16px);
+    border: 1px solid hsl(0 0% 100% / 0.14);
     border-radius: 1rem;
+    box-shadow: 0 10px 24px -18px rgba(0, 0, 0, 0.9);
     transition: background 0.2s ease, transform 0.2s ease;
   }
   .paper-row:active {
     transform: scale(0.985);
-    background: hsl(220 12% 17% / 0.86);
+    background: hsl(222 12% 20% / 1);
   }
+
 
   .paper-eyebrow {
     font-size: 10px;
@@ -270,16 +272,19 @@
     align-items: center;
     justify-content: center;
     line-height: 1;
-    background: hsl(220 12% 18% / 0.9);
-    color: hsl(var(--foreground));
-    border: 1px solid hsl(0 0% 100% / 0.16);
+    background: hsl(222 12% 22% / 1);
+    color: hsl(0 0% 100%);
+    border: 1px solid hsl(0 0% 100% / 0.24);
     border-radius: 9999px;
+    font-weight: 600;
+    box-shadow: 0 8px 20px -14px rgba(0, 0, 0, 0.9);
     transition: transform 0.2s ease, opacity 0.2s ease, background 0.2s ease;
   }
   .btn-ink-soft:active {
     transform: scale(0.98);
-    background: hsl(220 12% 24% / 0.95);
+    background: hsl(222 12% 30% / 1);
   }
+
 
 
 
