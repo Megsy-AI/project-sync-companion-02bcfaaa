@@ -25,7 +25,7 @@ Deno.serve(async (req) => {
 
     const admin = createClient(Deno.env.get("SUPABASE_URL") ?? "", Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "");
     const { data: intent, error } = await admin.from("ton_payment_intents")
-      .select("id,memo,amount_nano,status,expires_at,wallet_address,tx_hash,boc")
+      .select("id,memo,amount_nano,status,expires_at,wallet_address,tx_hash,boc,telegram_id,action,metadata")
       .eq("id", parsed.data.intent_id).single();
 
     if (error || !intent) return json({ error: "Payment reference not found", verified: false }, 404);
@@ -50,6 +50,12 @@ Deno.serve(async (req) => {
             status: "confirmed", tx_hash: txHash, confirmed_at: new Date().toISOString(), failure_reason: null,
           }).eq("id", intent.id).is("tx_hash", null);
           if (updateError) return json({ error: "Payment was already used", verified: false }, 409);
+          await notifyAdmins(admin, {
+            telegramId: Number(intent.telegram_id),
+            amountTon: Number(intent.amount_nano) / 1_000_000_000,
+            action: String(intent.action),
+            txHash,
+          });
           return json({ verified: true, tx_hash: txHash });
         }
       }
@@ -84,6 +90,32 @@ function extractComment(input: Record<string, unknown>) {
     if (slice.loadUint(32) !== 0) return "";
     return slice.loadStringTail();
   } catch { return ""; }
+}
+
+async function notifyAdmins(
+  admin: ReturnType<typeof createClient>,
+  payment: { telegramId: number; amountTon: number; action: string; txHash: string },
+) {
+  const token = Deno.env.get("TELEGRAM_BOT_TOKEN_HELLO") ?? Deno.env.get("TELEGRAM_BOT_TOKEN");
+  if (!token) return;
+  const { data: admins, error } = await admin.from("bot_admins").select("telegram_id");
+  if (error || !admins?.length) return;
+  const text = [
+    "<b>New TON payment</b>",
+    `Amount: <b>${payment.amountTon.toFixed(4)} TON</b>`,
+    `Operation: <b>${escapeHtml(payment.action)}</b>`,
+    `User: <code>${payment.telegramId}</code>`,
+    payment.txHash ? `Transaction: <code>${escapeHtml(payment.txHash)}</code>` : "",
+  ].filter(Boolean).join("\n");
+  await Promise.allSettled(admins.map((row: { telegram_id: number }) => fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ chat_id: row.telegram_id, text, parse_mode: "HTML" }),
+  })));
+}
+
+function escapeHtml(value: string) {
+  return value.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;");
 }
 
 

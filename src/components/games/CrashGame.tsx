@@ -344,37 +344,28 @@ const CrashGame = () => {
               transition={{ duration: 0.25, ease: "easeOut" }}
             >
               {phase === "crashed" ? (
-                <motion.img
-                  src="/images/duck-crash.gif"
+                <img
+                  src={`/images/duck-crash.gif?round=${round}`}
                   alt="Duck exploded"
                   width={360}
                   height={360}
                   className="h-[210px] w-[210px] object-contain drop-shadow-[0_10px_45px_hsl(var(--crash-danger)/0.55)]"
-                  animate={{ rotate: [-6, 6, -3, 0], x: [0, -10, 10, 0] }}
-                  transition={{ duration: 0.7, ease: "easeOut" }}
                 />
               ) : phase === "betting" ? (
-                <motion.img
-                  src="/images/duck-wait.gif"
+                <img
+                  src={`/images/duck-wait.gif?round=${round}`}
                   alt="Duck waiting for the next game"
                   width={360}
                   height={360}
                   className="h-[190px] w-[190px] object-contain"
-                  animate={{ y: [0, -8, 0] }}
-                  transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
                 />
               ) : (
-                <motion.img
-                  src="/images/duck-plane.gif"
+                <img
+                  src={`/images/duck-plane.gif?round=${round}`}
                   alt="Duck flying a plane"
                   width={360}
                   height={360}
                   className="h-[210px] w-[210px] object-contain drop-shadow-[0_18px_40px_hsl(var(--crash-accent)/0.5)]"
-                  animate={{ y: [0, -18, 0], x: [-6, 6, -6] }}
-                  transition={{
-                    y: { duration: 1.4, repeat: Infinity, ease: "easeInOut" },
-                    x: { duration: 2.6, repeat: Infinity, ease: "easeInOut" },
-                  }}
                 />
               )}
             </motion.div>
@@ -487,6 +478,7 @@ const CrashGame = () => {
               <img src={p.photo || ""} alt={`${p.name} avatar`} loading="lazy" className="h-9 w-9 shrink-0 rounded-full object-cover" />
               <span className="min-w-0 flex-1 truncate text-[15px] text-muted-foreground">{p.name}</span>
               <span className="text-right">
+                <span className="mb-0.5 block text-[9px] font-bold uppercase text-[hsl(var(--crash-gold))]">Live</span>
                 <LiveAmount value={phase === "betting" ? p.bet : p.bet * (crashAt ?? mult)} live={flying} />
                 {p.out && (
                   <span className="block text-[12px] font-semibold text-[hsl(var(--crash-danger))]">x{p.out.toFixed(2)}</span>

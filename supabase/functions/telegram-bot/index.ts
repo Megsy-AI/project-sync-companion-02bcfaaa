@@ -425,6 +425,19 @@ serve(async (req) => {
           chat_id: body.message.chat.id,
           text: `✅ Payment received — ${product?.title ?? row.product} is now active.`,
         });
+
+        const { data: admins } = await supabase.from('bot_admins').select('telegram_id');
+        const adminText =
+          `<b>New Telegram Stars payment</b>\n` +
+          `Amount: <b>${Number(successfulPayment.total_amount ?? 0)} Stars</b>\n` +
+          `Product: <b>${String(product?.title ?? row.product).replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;')}</b>\n` +
+          `User: <code>${row.telegram_id}</code>\n` +
+          `Charge: <code>${String(successfulPayment.telegram_payment_charge_id ?? '')}</code>`;
+        await Promise.allSettled((admins ?? []).map((admin: { telegram_id: number }) => tg('sendMessage', {
+          chat_id: admin.telegram_id,
+          text: adminText,
+          parse_mode: 'HTML',
+        })));
       }
 
       return new Response(JSON.stringify({ ok: true }), { headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
