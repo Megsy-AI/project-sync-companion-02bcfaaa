@@ -54,6 +54,7 @@ const AD_METHODS = [
   "triggerInterstitialVideo",
   "triggerInterstitialMixed",
   "triggerInterstitialBanner",
+  "triggerBannerAds",
   "triggerNativeNotification",
 ];
 
@@ -87,7 +88,7 @@ const getRichController = async (): Promise<any> => {
 
   try {
     // initialize() resolves once the publisher configuration is fetched.
-    await richController.initialize({ pubId: RICHADS_PUB_ID, appId: RICHADS_APP_ID });
+    await richController.initialize({ pubId: RICHADS_PUB_ID, appId: String(RICHADS_APP_ID), debug: false });
     initialised = true;
   } catch (e: any) {
     initialised = false;
