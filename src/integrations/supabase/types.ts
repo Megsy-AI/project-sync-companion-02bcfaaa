@@ -4051,6 +4051,24 @@ export type Database = {
         }
         Relationships: []
       }
+      game_crash_rounds: {
+        Row: {
+          crash_multiplier: number
+          created_at: string
+          round_id: number
+        }
+        Insert: {
+          crash_multiplier: number
+          created_at?: string
+          round_id: number
+        }
+        Update: {
+          crash_multiplier?: number
+          created_at?: string
+          round_id?: number
+        }
+        Relationships: []
+      }
       game_notifications: {
         Row: {
           created_at: string
@@ -12929,6 +12947,13 @@ export type Database = {
         Args: { _at: number; _bet_id: string; _telegram_id: number }
         Returns: Json
       }
+      game_crash_history: {
+        Args: { _limit?: number }
+        Returns: {
+          crash_multiplier: number
+          round_id: number
+        }[]
+      }
       game_crash_players: {
         Args: { _exclude?: number; _limit?: number; _round: number }
         Returns: {
@@ -12936,10 +12961,13 @@ export type Database = {
           photo_url: string
         }[]
       }
-      game_crash_start: {
-        Args: { _stake: number; _telegram_id: number }
-        Returns: Json
-      }
+      game_crash_round_result: { Args: { _round_id: number }; Returns: number }
+      game_crash_start:
+        | { Args: { _stake: number; _telegram_id: number }; Returns: Json }
+        | {
+            Args: { _round_id?: number; _stake: number; _telegram_id: number }
+            Returns: Json
+          }
       game_create_own_profile: {
         Args: {
           _first_name: string
