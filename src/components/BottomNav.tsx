@@ -12,13 +12,8 @@ const navItems = [
   { to: "/wallet", icon: Wallet, label: "Wallet" },
 ];
 
-/** Routes that own the full screen and provide their own back navigation. */
-const HIDDEN_ON = ["/games", "/ai"];
-
 const BottomNav = () => {
   const location = useLocation();
-
-  if (HIDDEN_ON.includes(location.pathname)) return null;
 
   return (
         <motion.nav

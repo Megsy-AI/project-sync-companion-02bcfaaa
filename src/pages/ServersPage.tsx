@@ -208,9 +208,6 @@ const ServersPage = () => {
                 />
 
                 <div className="px-4 pt-3">
-                  {server.rarity.toLowerCase() !== "common" && (
-                    <p className="paper-eyebrow">{server.rarity}</p>
-                  )}
                   <h3 className="font-display text-xl leading-none text-foreground">{server.name}</h3>
 
                   <div className="mt-3 grid grid-cols-2 gap-x-3 gap-y-1.5 text-[11px] text-muted-foreground">

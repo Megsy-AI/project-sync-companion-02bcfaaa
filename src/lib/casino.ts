@@ -28,10 +28,11 @@ export const playRound = async (
   return (data ?? { success: false, error: "unknown" }) as RoundResult;
 };
 
-export const crashStart = async (telegramId: number, stake: number) => {
+export const crashStart = async (telegramId: number, stake: number, roundId: number) => {
   const { data, error } = await (supabase as any).rpc("game_crash_start", {
     _telegram_id: telegramId,
     _stake: stake,
+    _round_id: roundId,
   });
   if (error) return { success: false, error: error.message } as any;
   return data as { success: boolean; bet_id?: string; error?: string; balance?: number };

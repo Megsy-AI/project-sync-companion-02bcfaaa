@@ -163,7 +163,7 @@ const AviatorGame = () => {
     startedAt.current = Date.now();
     setMult(1);
     if (queued) {
-      const res: any = await crashStart(user.telegramUser.id, queued);
+      const res: any = await crashStart(user.telegramUser.id, queued, Date.now());
       if (!res?.success) {
         toast({ title: "Bet failed", description: errorText(res?.error), variant: "destructive" });
         setQueued(null);

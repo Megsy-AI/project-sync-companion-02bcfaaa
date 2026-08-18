@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { ChevronLeft, Minus, Plus } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { Minus, Plus } from "lucide-react";
 import { useTonConnectUI } from "@tonconnect/ui-react";
 import { crashCashout, crashStart, errorText, fmt } from "@/lib/casino";
 import { supabase } from "@/integrations/supabase/client";
@@ -21,11 +20,7 @@ const CRASHED_MS = 3600;
 /** Every client derives the same global round id from the wall clock. */
 const ROUND_EPOCH = Date.UTC(2026, 0, 1) / 1000;
 const ROUND_LENGTH = 15; // seconds per round cycle
-const currentRound = () => Math.floor(Date.now() / 1000 - ROUND_EPOCH) / ROUND_LENGTH;
-const roundId = () => Math.floor(currentRound());
-
-/** Client-side visual bust point; the server always has the final word on payouts. */
-const randomBust = () => Math.min(25, Math.max(1.05, 0.96 / (1 - Math.random())));
+const roundId = () => Math.floor((Date.now() / 1000 - ROUND_EPOCH) / ROUND_LENGTH);
 
 const STARS = Array.from({ length: 46 }, (_, i) => {
   const r = (n: number) => (((Math.sin(i * 12.9898 + n * 78.233) * 43758.5453) % 1) + 1) % 1;
@@ -51,7 +46,6 @@ const chipTone = (m: number) =>
 const CrashGame = () => {
   const { user, refreshProfile } = useApp();
   const { toast } = useToast();
-  const navigate = useNavigate();
   const [tonConnectUI] = useTonConnectUI();
   const balance = Number(user.tonBalance || 0);
 
@@ -89,7 +83,8 @@ const CrashGame = () => {
       const unique: Player[] = [];
       rows.forEach((r, i) => {
         const name = (r.name || "Player").trim();
-        const photo = r.photo_url || null;
+        const photo = r.photo_url?.trim() || null;
+        if (!photo) return;
         if (seenName.has(name.toLowerCase())) return;
         if (photo && seenPhoto.has(photo)) return;
         seenName.add(name.toLowerCase());
@@ -106,6 +101,22 @@ const CrashGame = () => {
     },
     [user.telegramUser.id],
   );
+
+  useEffect(() => {
+    let active = true;
+    void (async () => {
+      const { data } = await (supabase as any).rpc("game_crash_history", { _limit: 12 });
+      if (!active || !Array.isArray(data)) return;
+      setHistory(
+        data
+          .map((item: { crash_multiplier: number | string }) => Number(item.crash_multiplier))
+          .filter(Number.isFinite),
+      );
+    })();
+    return () => {
+      active = false;
+    };
+  }, []);
 
   const probe = useCallback(
     async (id: string) => {
@@ -188,13 +199,15 @@ const CrashGame = () => {
   }, [phase]);
 
   const takeOff = async () => {
-    bust.current = randomBust();
+    const activeRound = round;
+    const { data: savedBust } = await (supabase as any).rpc("game_crash_round_result", { _round_id: activeRound });
+    bust.current = Number(savedBust) > 0 ? Number(savedBust) : 1;
     probed.current = false;
     cashedRef.current = false;
     startedAt.current = Date.now();
     setMult(1);
     if (queued) {
-      const res: any = await crashStart(user.telegramUser.id, queued);
+      const res: any = await crashStart(user.telegramUser.id, queued, activeRound);
       if (!res?.success) {
         toast({ title: "Bet failed", description: errorText(res?.error), variant: "destructive" });
         setQueued(null);
@@ -270,23 +283,9 @@ const CrashGame = () => {
   const step = (d: number) => setStake((s) => Math.max(0.1, Number((s + d).toFixed(2))));
 
   return (
-    <div
-      className="min-h-screen pb-10"
-      style={{
-        background:
-          "radial-gradient(120% 70% at 50% 0%, hsl(var(--crash-surface) / 0.55), transparent 60%), linear-gradient(180deg, hsl(var(--crash-bg)) 0%, hsl(258 60% 5%) 100%)",
-      }}
-    >
-      {/* Top bar — back button + balance only */}
-      <div className="flex items-center justify-between px-4 pt-4">
-        <button
-          type="button"
-          onClick={() => navigate(-1)}
-          aria-label="Back"
-          className="flex h-10 w-10 items-center justify-center rounded-full bg-foreground/10 text-foreground"
-        >
-          <ChevronLeft className="h-5 w-5" />
-        </button>
+    <div className="min-h-screen bg-transparent pb-28">
+      {/* Balance only */}
+      <div className="flex items-center justify-end px-4 pt-4">
         <span className="flex items-center gap-2 rounded-full bg-foreground/10 px-4 py-2 text-[14px] font-semibold text-foreground">
           <img src="/images/ton-icon.jpg" alt="" className="h-5 w-5 rounded-full object-cover" />
           {fmt(balance)}
@@ -318,22 +317,29 @@ const CrashGame = () => {
                 exit={{ opacity: 0, scale: 0.7 }}
                 transition={{ duration: 0.6 }}
               />
+            ) : phase === "betting" ? (
+              <motion.img
+                key="idle"
+                src="/images/duck-idle.webp"
+                alt="Duck waiting for the next game"
+                className="h-[190px] w-[190px] object-contain"
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1, y: [0, -6, 0] }}
+                exit={{ opacity: 0, scale: 0.8 }}
+                transition={{ y: { duration: 2.4, repeat: Infinity, ease: "easeInOut" }, opacity: { duration: 0.2 } }}
+              />
             ) : (
               <motion.img
                 key="plane"
-                src="/images/duck-plane.png"
+                src="/images/duck-fly.webp"
                 alt="Duck flying a plane"
                 className="h-[190px] w-[190px] object-contain drop-shadow-[0_18px_40px_hsl(var(--crash-accent)/0.5)]"
                 initial={{ opacity: 0, y: 30, scale: 0.9 }}
-                animate={
-                  flying
-                    ? { opacity: 1, scale: 1, y: [0, -18, 0], rotate: [-5, 5, -5] }
-                    : { opacity: 1, scale: 1, y: [0, -8, 0], rotate: [-2, 2, -2] }
-                }
+                animate={{ opacity: 1, scale: 1, y: [0, -18, 0], rotate: [-5, 5, -5] }}
                 exit={{ opacity: 0, y: -90, scale: 0.6 }}
                 transition={{
-                  y: { duration: flying ? 1.6 : 2.8, repeat: Infinity, ease: "easeInOut" },
-                  rotate: { duration: flying ? 2.2 : 4, repeat: Infinity, ease: "easeInOut" },
+                  y: { duration: 1.6, repeat: Infinity, ease: "easeInOut" },
+                  rotate: { duration: 2.2, repeat: Infinity, ease: "easeInOut" },
                   opacity: { duration: 0.3 },
                 }}
               />
@@ -443,16 +449,7 @@ const CrashGame = () => {
               key={p.key}
               className="flex items-center gap-3 border-b border-foreground/[0.06] bg-[hsl(var(--crash-accent)/0.14)] px-3 py-2.5 last:border-0"
             >
-              {p.photo ? (
-                <img src={p.photo} alt="" loading="lazy" className="h-9 w-9 shrink-0 rounded-full object-cover" />
-              ) : (
-                <span
-                  className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-[13px] font-semibold text-foreground"
-                  style={{ background: `hsl(${p.tone})` }}
-                >
-                  {p.name.slice(0, 1).toUpperCase()}
-                </span>
-              )}
+              <img src={p.photo || ""} alt={`${p.name} avatar`} loading="lazy" className="h-9 w-9 shrink-0 rounded-full object-cover" />
               <span className="min-w-0 flex-1 truncate text-[15px] text-muted-foreground">{p.name}</span>
               <span className="text-right">
                 <span className="block text-[15px] text-foreground">{p.bet.toFixed(2)}</span>
