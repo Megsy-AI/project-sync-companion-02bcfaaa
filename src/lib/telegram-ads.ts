@@ -64,17 +64,13 @@ const waitForTelegramUser = async (timeoutMs = 3000): Promise<boolean> => {
   return !!telegramUserId();
 };
 
-/**
- * Highest-paying formats first: video > mixed > banner > native notification.
- * Verified against the live SDK: every name below exists on the controller.
- */
+/** RichAds only settles trigger promises after the rendered ad is closed. */
 const AD_METHODS = [
-  "triggerInterstitialVideo",
-  "triggerInterstitialMixed",
-  "triggerInterstitialBanner",
-  "triggerBannerAds",
-  "triggerNativeNotification",
-];
+  { method: "triggerInterstitialMixed", types: ["INTERSTITIAL_MIXED_TRIGGER"] },
+  { method: "triggerInterstitialVideo", types: ["INTERSTITIAL_VIDEO_TRIGGER"] },
+  { method: "triggerInterstitialBanner", types: ["INTERSTITIAL_BANNER_TRIGGER"] },
+  { method: "triggerNativeNotification", types: ["PUSH_STYLE_TRIGGER"] },
+] as const;
 
 /** Rejects if a promise hangs longer than `ms`. */
 const withTimeout = <T,>(p: Promise<T>, ms: number, label: string): Promise<T> =>
@@ -120,7 +116,7 @@ const getRichController = async (): Promise<any> => {
       Promise.resolve(
         richController.initialize({ pubId: RICHADS_PUB_ID, appId: String(RICHADS_APP_ID), debug: false }),
       ),
-      8000,
+      15000,
       "init",
     );
     initialised = true;
@@ -146,21 +142,29 @@ export const showAd = async (): Promise<boolean> => {
   const controller = await getRichController();
   if (!controller) return false;
 
-  for (const method of AD_METHODS) {
+  const enabledTypes = new Set<string>();
+  const typeMap = controller.activeWidgetTypesMap;
+  if (typeMap && typeof typeMap.keys === "function") {
+    for (const type of typeMap.keys()) enabledTypes.add(String(type));
+  }
+
+  const availableMethods = AD_METHODS.filter(({ method, types }) => {
+    if (typeof controller[method] !== "function") return false;
+    return enabledTypes.size === 0 || types.some((type) => enabledTypes.has(type));
+  });
+
+  for (const { method } of availableMethods) {
     const fn = controller[method];
     if (typeof fn !== "function") continue;
     try {
       const out = fn.call(controller);
       if (out && typeof out.then === "function") {
         try {
-          const res = await withTimeout(out, 20000, method);
+          // This promise resolves when the viewer closes/completes the ad.
+          const res = await withTimeout(out, 90000, method);
           if (res === false) continue;
           return true;
         } catch (err: any) {
-          if (String(err?.message ?? "").includes("timeout")) {
-            // The ad view is open but the SDK never settles: count it as shown.
-            return true;
-          }
           throw err;
         }
       }
@@ -171,7 +175,11 @@ export const showAd = async (): Promise<boolean> => {
       // no fill for this format, try the next one
     }
   }
-  if (!lastAdError) lastAdError = "No fill";
+  if (!lastAdError) {
+    lastAdError = enabledTypes.size
+      ? "No ad fill is available for the enabled formats"
+      : "No ad format is enabled for this Mini App";
+  }
   return false;
 };
 
