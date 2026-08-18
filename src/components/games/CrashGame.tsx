@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { Minus, Plus } from "lucide-react";
 import { useTonConnectUI } from "@tonconnect/ui-react";
 import { crashCashout, crashStart, errorText, fmt } from "@/lib/casino";
